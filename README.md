@@ -1,4 +1,4 @@
-🖥️ CodingBoyz Debian Terminal
+# 🖥️ CodingBoyz Debian Terminal
 Web-based Debian terminal with Pterodactyl-style UI.
 
 DebianNodePortLicense
@@ -14,6 +14,7 @@ Features
 ✅ System resource monitoring
 ✅ Responsive design
 ✅ Suga app importable
+
 # Deploy on Suga
 Push this repo to GitHub
 Connect GitHub to Suga
