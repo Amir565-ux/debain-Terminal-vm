@@ -1,1 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debian Live Execution Matrix</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@5.3.0/css/xterm.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0e17;
+            --bg-secondary: #111827;
+            --bg-tertiary: #1a2332;
+            --bg-card: #151d2b;
+            --accent-green: #00ff88;
+            --accent-blue: #00d4ff;
+            --accent-red: #ff3366;
+            --accent-yellow: #ffcc00;
+            --accent-purple: #a855f7;
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --border-color: #1e293b;
+            --glow-green: 0 0 20px rgba(0, 255, 136, 0.3);
+            --glow-blue: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            min-width: 280px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .sidebar-header {
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-blue));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: var(--glow-green);
+        }
+
+        .logo-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 22px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-subtitle {
+            font-size: 11px;
+            color: var(--text-secondary);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 16px 12px;
+            overflow-y: auto;
+        }
+
+        .nav-section {
+            margin-bottom: 24px;
+        }
+
+        .nav-section-title {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            padding: 0 12px;
+            margin-bottom: 8px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .nav-item:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .nav-item.active {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--accent-green);
+            box-shadow: inset 3px 0 0 var(--accent-green);
+        }
+
+        .nav-item-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .sidebar-status {
+            padding: 16px 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-green);
+            box-shadow: 0 0 10px var(--accent-green);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            height: 60px;
+            min-height: 60px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+        }
+
+        .top-bar-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .breadcrumb span {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .top-bar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .top-btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .top-btn:hover {
+            background: var(--border-color);
+        }
+
+        .top-btn.danger {
+            border-color: rgba(255, 51, 102, 0.3);
+            color: var(--accent-red);
+        }
+
+        .top-btn.danger:hover {
+            background: rgba(255, 51, 102, 0.1);
+            border-color: var(--accent-red);
+        }
+
+        .top-btn.warning {
+            border-color: rgba(255, 204, 0, 0.3);
+            color: var(--accent-yellow);
+        }
+
+        .top-btn.warning:hover {
+            background: rgba(255, 204, 0, 0.1);
+            border-color: var(--accent-yellow);
+        }
+
+        /* Terminal Header */
+        .terminal-header {
+            height: 50px;
+            min-height: 50px;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+        }
+
+        .terminal-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .terminal-title-icon {
+            color: var(--accent-green);
+        }
+
+        .terminal-tabs {
+            display: flex;
+            gap: 2px;
+        }
+
+        .terminal-tab {
+            padding: 6px 16px;
+            background: var(--bg-primary);
+            border-radius: 6px 6px 0 0;
+            font-size: 12px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+            border-bottom: none;
+        }
+
+        .terminal-tab.active {
+            background: var(--bg-card);
+            color: var(--accent-green);
+        }
+
+        /* Terminal Container */
+        .terminal-container {
+            flex: 1;
+            background: #000000;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .terminal-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-green), var(--accent-blue), var(--accent-purple));
+            z-index: 10;
+        }
+
+        #terminal {
+            height: 100%;
+            padding: 16px;
+        }
+
+        .xterm {
+            height: 100%;
+        }
+
+        .xterm-viewport {
+            overflow-y: auto !important;
+        }
+
+        /* Status Bar */
+        .status-bar {
+            height: 32px;
+            min-height: 32px;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .status-bar-left, .status-bar-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-item .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent-green);
+        }
+
+        /* Overlay effects */
+        .scanline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.03) 0px,
+                rgba(0, 0, 0, 0.03) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            z-index: 1000;
+        }
+
+        /* Loading screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg-primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loading-logo {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 36px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 24px;
+        }
+
+        .loading-bar-container {
+            width: 300px;
+            height: 4px;
+            background: var(--bg-tertiary);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .loading-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-green), var(--accent-blue));
+            border-radius: 2px;
+            animation: loading 2s ease-in-out;
+            width: 0%;
+        }
+
+        @keyframes loading {
+            0% { width: 0%; }
+            50% { width: 70%; }
+            100% { width: 100%; }
+        }
+
+        .loading-text {
+            margin-top: 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-logo">CodingBoyz</div>
+        <div class="loading-bar-container">
+            <div class="loading-bar"></div>
+        </div>
+        <div class="loading-text">Initializing workspace...</div>
+    </div>
+
+    <!-- Scanline Effect -->
+    <div class="scanline"></div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo-container">
+                <div class="logo-icon">🖥️</div>
+                <div class="logo-text">CodingBoyz</div>
+            </div>
+            <div class="logo-subtitle">Terminal Matrix</div>
+        </div>
+
+        <div class="sidebar-nav">
+            <div class="nav-section">
+                <div class="nav-section-title">Server</div>
+                <div class="nav-item active">
+                    <div class="nav-item-icon">⚡</div>
+                    <span>Console</span>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-item-icon">📊</div>
+                    <span>Statistics</span>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-item-icon">📁</div>
+                    <span>File Manager</span>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-item-icon">🗄️</div>
+                    <span>Databases</span>
+                </div>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Management</div>
+                <div class="nav-item">
+                    <div class="nav-item-icon">⚙️</div>
+                    <span>Configuration</span>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-item-icon">🔄</div>
+                    <span>Backups</span>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-item-icon">📋</div>
+                    <span>Schedules</span>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-item-icon">🔑</div>
+                    <span>SSH Keys</span>
+                </div>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Network</div>
+                <div class="nav-item">
+                    <div class="nav-item-icon">🌐</div>
+                    <span>Ports</span>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-item-icon">🔐</div>
+                    <span>Firewall</span>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-item-icon">📡</div>
+                    <span>Logs</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar-status">
+            <div class="status-indicator">
+                <div class="status-dot"></div>
+                <span>Debian 12 - Online</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div class="top-bar-left">
+                <div class="breadcrumb">
+                    Server › <span>Debian Console</span>
+                </div>
+            </div>
+            <div class="top-bar-right">
+                <button class="top-btn danger" id="killBtn" title="Send Ctrl+C">
+                    <span>⚡</span> Kill Process (Ctrl+C)
+                </button>
+                <button class="top-btn warning" id="rebootBtn" title="Reboot Workspace">
+                    <span>🔄</span> Reboot Core Workspace
+                </button>
+            </div>
+        </div>
+
+        <!-- Terminal Header -->
+        <div class="terminal-header">
+            <div class="terminal-title">
+                <span class="terminal-title-icon">❯</span>
+                Debian GNU/Linux 12 (Bookworm) - bash
+            </div>
+            <div class="terminal-tabs">
+                <div class="terminal-tab active">bash</div>
+            </div>
+        </div>
+
+        <!-- Terminal -->
+        <div class="terminal-container">
+            <div id="terminal"></div>
+        </div>
+
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="status-bar-left">
+                <div class="status-item">
+                    <div class="dot"></div>
+                    <span>Connected</span>
+                </div>
+                <div class="status-item">
+                    <span>PID: <span id="pidDisplay">-</span></span>
+                </div>
+            </div>
+            <div class="status-bar-right">
+                <div class="status-item">
+                    <span>UTF-8</span>
+                </div>
+                <div class="status-item">
+                    <span>xterm-256color</span>
+                </div>
+                <div class="status-item">
+                    <span id="timeDisplay">--:--:--</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/xterm@5.3.0/lib/xterm.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit@0.8.0/lib/xterm-addon-fit.js"></script>
+    <script>
+        // Initialize terminal
+        const term = new Terminal({
+            cursorBlink: true,
+            cursorStyle: 'block',
+            fontSize: 14,
+            fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
+            theme: {
+                background: '#000000',
+                foreground: '#e2e8f0',
+                cursor: '#00ff88',
+                cursorAccent: '#000000',
+                selectionBackground: 'rgba(0, 255, 136, 0.3)',
+                black: '#000000',
+                red: '#ff3366',
+                green: '#00ff88',
+                yellow: '#ffcc00',
+                blue: '#00d4ff',
+                magenta: '#a855f7',
+                cyan: '#22d3ee',
+                white: '#e2e8f0',
+                brightBlack: '#475569',
+                brightRed: '#ff6b9d',
+                brightGreen: '#4ade80',
+                brightYellow: '#fde047',
+                brightBlue: '#38bdf8',
+                brightMagenta: '#c084fc',
+                brightCyan: '#67e8f9',
+                brightWhite: '#f8fafc'
+            },
+            allowTransparency: false,
+            scrollback: 10000,
+            convertEol: true
+        });
+
+        const fitAddon = new FitAddon.FitAddon();
+        term.loadAddon(fitAddon);
+        term.open(document.getElementById('terminal'));
+        fitAddon.fit();
+
+        // Handle resize
+        window.addEventListener('resize', () => {
+            fitAddon.fit();
+        });
+
+        // WebSocket connection
+        let ws;
+        let reconnectAttempts = 0;
+        const maxReconnectAttempts = 5;
+
+        function connectWebSocket() {
+            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsUrl = `${protocol}//${window.location.host}`;
+            
+            ws = new WebSocket(wsUrl);
+
+            ws.onopen = () => {
+                console.log('WebSocket connected');
+                reconnectAttempts = 0;
+                document.getElementById('pidDisplay').textContent = Math.floor(Math.random() * 10000) + 1000;
+            };
+
+            ws.onmessage = (event) => {
+                term.write(event.data);
+            };
+
+            ws.onclose = () => {
+                console.log('WebSocket disconnected');
+                if (reconnectAttempts < maxReconnectAttempts) {
+                    reconnectAttempts++;
+            
