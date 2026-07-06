@@ -2,13 +2,27 @@ version: '3.8'
 
 services:
   debian-terminal:
-    build: .
+    build: 
+      context: .
+      dockerfile: Dockerfile
     container_name: codingboyz-debian-terminal
+    hostname: codingboyz-debian
     ports:
       - "8080:8080"
     environment:
       - NODE_ENV=production
       - PORT=8080
+      - TERM=xterm-256color
     restart: unless-stopped
     tty: true
     stdin_open: true
+    labels:
+      - "com.codingboyz.app=debian-terminal"
+      - "com.codingboyz.version=1.0.0"
+      - "com.codingboyz.description=Web Debian Terminal"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
