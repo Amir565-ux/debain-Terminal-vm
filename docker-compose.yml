@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  debian-terminal:
+    build: .
+    container_name: codingboyz-debian-terminal
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=production
+      - PORT=8080
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
