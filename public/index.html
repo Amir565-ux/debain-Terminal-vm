@@ -1,103 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>CodingBoyz Terminal</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@5.3.0/css/xterm.css">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#0a0f18;--bg2:#0f1520;--g:#00ff88;--gd:rgba(0,255,136,.15);--r:#ff3355;--rd:rgba(255,51,85,.15);--y:#ffc107;--yd:rgba(255,193,7,.15);--t:#cbd5e1;--tm:#64748b;--tn:#475569;--bd:rgba(255,255,255,.07)}
-body{font-family:'Inter',sans-serif;background:#060a10;color:var(--t);display:flex;height:100vh;overflow:hidden}
-.side{width:250px;min-width:250px;background:var(--bg);border-right:1px solid var(--bd);display:flex;flex-direction:column}
-.s-head{padding:20px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:12px}
-.s-icon{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--g),#22d3ee);display:flex;align-items:center;justify-content:center;font-size:20px}
-.s-name{font-family:'JetBrains Mono',monospace;font-size:17px;font-weight:800;background:linear-gradient(135deg,var(--g),#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.s-sub{font-size:9px;color:var(--tn);text-transform:uppercase;letter-spacing:2px;margin-top:2px}
-.s-card{margin:12px;padding:12px;background:var(--bg2);border-radius:8px;border:1px solid var(--bd)}
-.s-row{display:flex;justify-content:space-between;font-size:11px;margin-top:6px}
-.s-row .l{color:var(--tn)}.s-row .v{color:var(--t);font-family:'JetBrains Mono',monospace}
-.s-status{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--g);font-weight:600;justify-content:space-between;margin-bottom:8px}
-.s-dot{width:6px;height:6px;border-radius:50%;background:var(--g);box-shadow:0 0 8px var(--g);animation:p 2s infinite}
-@keyframes p{50%{opacity:.5}}
-.nav{flex:1;padding:8px 10px;overflow-y:auto}
-.n-g{margin-bottom:16px}
-.n-t{font-size:9px;color:var(--tn);text-transform:uppercase;letter-spacing:1.5px;padding:0 8px;margin-bottom:4px}
-.n-l{display:flex;align-items:center;gap:8px;padding:8px;border-radius:6px;color:var(--tm);font-size:13px;cursor:pointer;transition:.15s}
-.n-l:hover{background:#1a2538;color:var(--t)}
-.n-l.a{background:var(--gd);color:var(--g);box-shadow:inset 3px 0 0 var(--g)}
-.n-b{margin-left:auto;background:var(--gd);color:var(--g);font-size:9px;padding:2px 6px;border-radius:8px;font-family:'JetBrains Mono',monospace}
-.s-foot{padding:12px;border-top:1px solid var(--bd);font-size:10px;color:var(--tn);text-align:center}
-.s-foot span{color:var(--g);font-weight:600}
-.main{flex:1;display:flex;flex-direction:column}
-.top{height:52px;background:var(--bg);border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;padding:0 16px}
-.bread{font-size:13px;color:var(--tm)}.bread b{color:#f1f5f9}
-.btns{display:flex;gap:8px}
-.btn{padding:6px 12px;border-radius:6px;font-size:11px;font-weight:600;font-family:'JetBrains Mono',monospace;cursor:pointer;border:1px solid transparent;display:flex;align-items:center;gap:5px}
-.bk{background:var(--rd);border-color:rgba(255,51,85,.3);color:var(--r)}.bk:hover{box-shadow:0 0 20px rgba(255,51,85,.2)}
-.br{background:var(--yd);border-color:rgba(255,193,7,.3);color:var(--y)}.br:hover{box-shadow:0 0 20px rgba(255,193,7,.2)}
-.th{height:38px;background:var(--bg2);border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;padding:0 12px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--tm)}
-.th-d{width:8px;height:8px;border-radius:50%;background:var(--g);box-shadow:0 0 8px var(--g);margin-right:8px}
-.th b{color:var(--t)}
+body{font-family:'JetBrains Mono',monospace;background:#000;color:#ff00aa;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+.top{height:48px;min-height:48px;background:#050505;border-bottom:1px solid #1a0011;display:flex;align-items:center;justify-content:space-between;padding:0 12px}
+.brand{font-size:15px;font-weight:800;color:#ff00aa;text-shadow:0 0 10px rgba(255,0,170,.5)}
+.btns{display:flex;gap:6px}
+.btn{padding:5px 10px;border-radius:5px;font-size:10px;font-weight:700;cursor:pointer;border:1px solid rgba(255,0,170,.3);background:rgba(255,0,170,.1);color:#ff00aa;display:flex;align-items:center;gap:4px}
+.btn:active{background:rgba(255,0,170,.3)}
+.th{height:32px;min-height:32px;background:#050505;border-bottom:1px solid #1a0011;display:flex;align-items:center;padding:0 12px;font-size:11px;color:#660044;gap:6px}
+.th-d{width:6px;height:6px;border-radius:50%;background:#ff00aa;box-shadow:0 0 8px #ff00aa}
 .tc{flex:1;background:#000;position:relative}
-.tc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--g),#22d3ee,#a855f7,var(--g));background-size:200%;animation:gs 3s linear infinite;z-index:10}
+.tc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#ff00aa,#ff66cc,#ff00aa);background-size:200%;animation:gs 2s linear infinite;z-index:10}
 @keyframes gs{to{background-position:200%}}
-#term{height:100%;padding:12px;font-family:'JetBrains Mono',monospace;font-size:14px;color:#c9d1d9;overflow-y:auto;white-space:pre-wrap;word-wrap:break-word}
-#term::-webkit-scrollbar{width:5px}#term::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:3px}
+#term{height:100%;padding:10px;font-family:'JetBrains Mono',monospace;font-size:14px;color:#ff00aa;overflow-y:auto;white-space:pre-wrap;word-wrap:break-word}
+#term::-webkit-scrollbar{width:4px}#term::-webkit-scrollbar-thumb{background:#ff00aa;border-radius:3px}
 .xterm{height:100%}.xterm-viewport{overflow-y:auto!important}
-.sb{height:26px;background:var(--bg);border-top:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;padding:0 12px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--tn)}
-.sb-l,.sb-r{display:flex;gap:12px;align-items:center}
-.sb-d{width:5px;height:5px;border-radius:50%;background:var(--g)}
-.load{position:fixed;inset:0;background:#060a10;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:.5s}
-.load.h{opacity:0;visibility:hidden}
-.load h1{font-family:'JetBrains Mono',monospace;font-size:28px;background:linear-gradient(135deg,var(--g),#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:20px}
-.load-bar{width:200px;height:3px;background:#141c2b;border-radius:2px;overflow:hidden;margin-bottom:12px}
-.load-fill{height:100%;background:linear-gradient(90deg,var(--g),#22d3ee);width:0%;transition:.3s}
-.load p{font-size:11px;color:var(--tn);font-family:'JetBrains Mono',monospace}
-.toast-c{position:fixed;top:12px;right:12px;z-index:9998;display:flex;flex-direction:column;gap:6px}
-.toast{padding:8px 14px;border-radius:6px;font-size:11px;border:1px solid;animation:ti .3s}
-.toast.w{background:var(--yd);border-color:rgba(255,193,7,.3);color:var(--y)}
-.toast.e{background:var(--rd);border-color:rgba(255,51,85,.3);color:var(--r)}
-@keyframes ti{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
-.cur{display:inline-block;width:8px;height:14px;background:var(--g);vertical-align:middle;animation:bl 1s step-end infinite}
+.sb{height:24px;min-height:24px;background:#050505;border-top:1px solid #1a0011;display:flex;align-items:center;justify-content:space-between;padding:0 12px;font-size:9px;color:#660044}
+.sb-d{width:4px;height:4px;border-radius:50%;background:#ff00aa;display:inline-block;margin-right:4px}
+#keyBtn{display:none;position:fixed;bottom:30px;right:16px;width:50px;height:50px;border-radius:50%;background:#ff00aa;color:#000;border:none;font-size:22px;font-weight:900;cursor:pointer;box-shadow:0 0 20px rgba(255,0,170,.6);z-index:9999}
+@media(max-width:768px){#keyBtn{display:flex;align-items:center;justify-content:center}}
+.cur{display:inline-block;width:8px;height:14px;background:#ff00aa;vertical-align:middle;animation:bl 1s step-end infinite}
 @keyframes bl{50%{opacity:0}}
-@media(max-width:900px){.side{width:50px;min-width:50px}.s-head,.s-card,.n-t,.n-l span,.n-b,.s-foot span{display:none}.n-l{justify-content:center;padding:10px}.n-l.a{box-shadow:none}}
-@media(max-width:600px){.side{display:none}.btn span{display:none}}
 </style>
 </head>
 <body>
-<div class="load" id="ld"><h1>CodingBoyz</h1><div class="load-bar"><div class="load-fill" id="lb"></div></div><p id="ls">Connecting...</p></div>
-<div class="toast-c" id="tc"></div>
-<aside class="side">
-<div class="s-head"><div class="s-icon">🖥️</div><div><div class="s-name">CodingBoyz</div><div class="s-sub">Terminal Matrix</div></div></div>
-<div class="s-card"><div class="s-status"><span style="text-transform:uppercase;letter-spacing:1px;font-size:10px;color:var(--tm)">Server</span><span><span class="s-dot"></span> Online</span></div><div class="s-row"><span class="l">OS</span><span class="v">Debian 12</span></div><div class="s-row"><span class="l">CPU</span><span class="v" id="ci">--</span></div><div class="s-row"><span class="l">Mem</span><span class="v" id="mi">--</span></div><div class="s-row"><span class="l">Up</span><span class="v" id="ui">--</span></div></div>
-<div class="nav">
-<div class="n-g"><div class="n-t">Console</div><div class="n-l a"><span>⚡</span><span>Console</span><span class="n-b">LIVE</span></div><div class="n-l"><span>📊</span><span>Statistics</span></div></div>
-<div class="n-g"><div class="n-t">Manage</div><div class="n-l"><span>📁</span><span>Files</span></div><div class="n-l"><span>🗄️</span><span>Databases</span></div><div class="n-l"><span>💾</span><span>Backups</span></div></div>
-<div class="n-g"><div class="n-t">Network</div><div class="n-l"><span>🌐</span><span>Ports</span></div><div class="n-l"><span>🛡️</span><span>Firewall</span></div><div class="n-l"><span>📜</span><span>Logs</span></div></div>
-<div class="n-g"><div class="n-t">Settings</div><div class="n-l"><span>⚙️</span><span>Config</span></div><div class="n-l"><span>🔑</span><span>SSH Keys</span></div></div>
-</div>
-<div class="s-foot">Powered by <span>CodingBoyz</span></div>
-</aside>
-<main class="main">
-<div class="top"><div class="bread">Servers › Debian 12 › <b>Console</b></div><div class="btns"><button class="btn bk" id="bkl">⚡ <span>Kill Process (Ctrl+C)</span></button><button class="btn br" id="brb">🔄 <span>Reboot Core Workspace</span></button></div></div>
-<div class="th"><div style="display:flex;align-items:center"><span class="th-d"></span><b>root@codingboyz</b>:~ — bash</div><div style="background:var(--gd);color:var(--g);padding:2px 8px;border-radius:4px">bash</div></div>
-<div class="tc"><div id="term"></div></div>
-<div class="sb"><div class="sb-l"><div style="display:flex;align-items:center;gap:4px"><div class="sb-d"></div>Connected</div><div>PID: <span id="pid">----</span></div></div><div class="sb-r"><div>UTF-8</div><div id="clk">--:--:--</div></div></div>
-</main>
+<div class="top"><div class="brand">⚡ CodingBoyz</div><div class="btns"><button class="btn" id="bkl">⚡ Kill</button><button class="btn" id="brb">🔄 Reboot</button></div></div>
+<div class="th"><span class="th-d"></span><b style="color:#ff00aa">root@codingboyz</b>:~ — bash</div>
+<div class="tc"><div id="term" onclick="document.getElementById('fakeIn').focus()"></div></div>
+<div class="sb"><div><span class="sb-d"></span>Connected | PID: <span id="pid">----</span></div><div id="clk">--:--:--</div></div>
+<input type="text" id="fakeIn" style="position:fixed;left:-9999px;opacity:0" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+<button id="keyBtn">⌨</button>
 <script>
-let term=null,ws=null;
+let term=null,ws=null,rc=0;
 const $=id=>document.getElementById(id);
-function toast(m,t='w'){$('tc').insertAdjacentHTML('beforeend',`<div class="toast ${t}">${m}</div>`);setTimeout(()=>{$('tc').lastChild.remove()},3000)}
-async function load(){const s=[['15','Init kernel...'],['40','Loading drivers...'],['65','Mounting disks...'],['90','Starting services...'],['100','Ready.']];for(const[p,t]of s){$('lb').style.width=p+'%';$('ls').textContent=t;await new Promise(r=>setTimeout(r,250))}$('ld').classList.add('h')}
-function fallback(){const d=$('term');d.innerHTML='<span style="color:#00ff88">root@codingboyz</span>:<span style="color:#6cb6ff">~</span># <span class="cur"></span>';d.style.cursor='text';d.tabIndex=0;d.focus();let c='';d.onkeydown=e=>{if(e.key==='Enter'){if(ws)ws.send(c+'\n');c='';d.innerHTML='<span style="color:#00ff88">root@codingboyz</span>:<span style="color:#6cb6ff">~</span># <span class="cur"></span>'}else if(e.key==='Backspace'){c=c.slice(0,-1);d.innerHTML=`<span style="color:#00ff88">root@codingboyz</span>:<span style="color:#6cb6ff">~</span># ${c}<span class="cur"></span>`}else if(e.key.length===1&&!e.ctrlKey){c+=e.key;d.innerHTML=`<span style="color:#00ff88">root@codingboyz</span>:<span style="color:#6cb6ff">~</span># ${c}<span class="cur"></span>`}};term={write:d=>{const cl=d.replace(/\x1b\[[0-9;]*m/g,'');if(!cl.trim())return;d.innerHTML+='<br>'+cl+'<br><span style="color:#00ff88">root@codingboyz</span>:<span style="color:#6cb6ff">~</span># <span class="cur"></span>';d.scrollTop=d.scrollHeight}}}
-function initTerm(){if(typeof Terminal!=='undefined'){try{term=new Terminal({cursorBlink:true,cursorStyle:'block',fontSize:14,fontFamily:"'JetBrains Mono',monospace",theme:{background:'#000',foreground:'#c9d1d9',cursor:'#00ff88',green:'#00ff88',blue:'#6cb6ff',yellow:'#ffd93d',red:'#ff6b6b'},scrollback:5000,convertEol:true});term.open($('term'));function fit(){try{const p=$('term').parentElement;term.resize(Math.max(1,Math.floor(p.clientWidth/8.4)),Math.max(1,Math.floor(p.clientHeight/17)))}catch(e){}}window.addEventListener('resize',fit);setTimeout(fit,100);term.onData(d=>{if(ws&&ws.readyState===1)ws.send(d)})}catch(e){fallback()}}else{fallback()}}
-let rc=0;
+function toast(m){const t=document.createElement('div');t.style.cssText='position:fixed;top:10px;right:10px;background:rgba(255,0,170,.9);color:#000;padding:8px 12px;border-radius:5px;font-size:12px;font-weight:700;z-index:99999';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),2000)}
+function fallback(){const d=$('term');d.innerHTML='<span style="color:#ff00aa">root@codingboyz</span>:~# <span class="cur"></span>';let c='';const fi=$('fakeIn');fi.oninput=e=>{c=fi.value;d.innerHTML=`<span style="color:#ff00aa">root@codingboyz</span>:~# ${c}<span class="cur"></span>`};fi.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();if(ws&&ws.readyState===1)ws.send(c+'\n');c='';fi.value='';d.innerHTML='<span style="color:#ff00aa">root@codingboyz</span>:~# <span class="cur"></span>'}};term={write:v=>{const cl=v.replace(/\x1b\[[0-9;]*m/g,'');if(!cl.trim())return;d.innerHTML+='<br>'+cl+'<br><span style="color:#ff00aa">root@codingboyz</span>:~# <span class="cur"></span>';d.scrollTop=d.scrollHeight}}}
+function initTerm(){if(typeof Terminal!=='undefined'){try{term=new Terminal({cursorBlink:true,cursorStyle:'block',fontSize:14,fontFamily:"'JetBrains Mono',monospace",theme:{background:'#000',foreground:'#ff00aa',cursor:'#ff00aa',green:'#ff00aa',blue:'#ff66cc',yellow:'#ffaadd',red:'#ff0055',cyan:'#ff00aa',magenta:'#ff00aa',white:'#ff00aa'},scrollback:5000,convertEol:true});term.open($('term'));function fit(){try{const p=$('term').parentElement;term.resize(Math.max(1,Math.floor(p.clientWidth/8.4)),Math.max(1,Math.floor(p.clientHeight/17)))}catch(e){}}window.addEventListener('resize',fit);setTimeout(fit,100);const fi=$('fakeIn');fi.oninput=()=>{if(ws&&ws.readyState===1)ws.send(fi.value);fi.value=''};fi.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault()}if(ws&&ws.readyState===1)ws.send(e.key)};term.onData(d=>{if(ws&&ws.readyState===1)ws.send(d)})}catch(e){fallback()}}else{fallback()}}
 function conn(){const pr=location.protocol==='https:'?'wss:':'ws:';try{ws=new WebSocket(`${pr}//${location.host}`)}catch(e){return setTimeout(conn,2000)}ws.onopen=()=>{rc=0;$('pid').textContent=String(1000+Math.random()*9000|0)};ws.onmessage=e=>{if(term)term.write(e.data)};ws.onclose=()=>{if(rc<10){rc++;setTimeout(conn,2000*rc)}};ws.onerror=()=>{}}
- $('bkl').onclick=()=>{if(ws&&ws.readyState===1){ws.send('\x03');toast('Kill signal sent')}else toast('Not connected','e')};
- $('brb').onclick=()=>{if(ws&&ws.readyState===1){ws.send('__reboot__');toast('Rebooting...')}else toast('Not connected','e')};
-document.querySelectorAll('.n-l').forEach(l=>l.onclick=function(){document.querySelectorAll('.n-l').forEach(x=>x.classList.remove('a'));this.classList.add('a');if(this.dataset.p!=='c')toast('Coming soon')});
-async function sys(){try{const r=await fetch('/api/system');if(r.ok){const d=await r.json();$('ci').textContent=d.cpuCount+' cores';$('mi').textContent=d.usedMemory+' / '+d.totalMemory;$('ui').textContent=d.uptime}}catch(e){}}
-window.onload=async()=>{await load();initTerm();conn();setInterval(()=>$('clk').textContent=new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'}),1000);sys();setInterval(sys,15000)};
+ $('bkl').onclick=()=>{if(ws&&ws.readyState===1){ws.send('\x03');toast('Killed!')}else toast('Offline')};
+ $('brb').onclick=()=>{if(ws&&ws.readyState===1){ws.send('__reboot__');toast('Rebooting...')}else toast('Offline')};
+ $('keyBtn').onclick=()=>$('fakeIn').focus();
+window.onload=()=>{initTerm();conn();setInterval(()=>$('clk').textContent=new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'}),1000)};
 </script>
 </body>
 </html>
