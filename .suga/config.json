@@ -1,1 +1,50 @@
-
+{
+  "name": "CodingBoyz Debian Terminal",
+  "description": "Web-based Debian terminal with Pterodactyl-style UI - Full root access through browser",
+  "version": "1.0.0",
+  "author": "CodingBoyz",
+  "icon": "🖥️",
+  "category": "development",
+  "tags": ["terminal", "debian", "ssh", "console", "codingboyz"],
+  "port": 8080,
+  "docker": {
+    "image": "debian:latest",
+    "build": ".",
+    "ports": [
+      {
+        "container": 8080,
+        "host": 8080,
+        "protocol": "tcp",
+        "description": "Web Terminal Interface"
+      }
+    ],
+    "volumes": [],
+    "environment": [
+      {
+        "name": "NODE_ENV",
+        "value": "production"
+      },
+      {
+        "name": "PORT",
+        "value": "8080"
+      }
+    ],
+    "restart_policy": "unless-stopped"
+  },
+  "healthcheck": {
+    "path": "/",
+    "interval": 30,
+    "timeout": 10,
+    "retries": 3
+  },
+  "ui": {
+    "type": "web",
+    "url": "http://0.0.0.0:8080"
+  },
+  "permissions": {
+    "network": true,
+    "privileged": false,
+    "tty": true,
+    "stdin": true
+  }
+}
