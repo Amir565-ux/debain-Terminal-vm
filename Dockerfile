@@ -33,6 +33,8 @@ RUN apt-get update && apt-get install -y \
     && apt-get install -y nodejs \
     && rm -rf /var/lib/apt/lists/*
 
+RUN sudo apt update && sudo apt install -y qemu-system-x86 qemu-utils cloud-image-utils 
+
 # Verify Node.js installation
 RUN node --version && npm --version
 
